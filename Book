@@ -1,0 +1,29 @@
+
+library(recommenderlab)
+library(caTools)
+
+book<- read.csv(file.choose())
+book1<-book[,-1]
+str(book1)
+hist(book1$Book.Rating)
+
+#the datatype should be realRatingMatrix inorder to build recommendation engine
+book_rating_matrix<- as(book1,"realRatingMatrix")
+book_rating_matrix
+
+#Popularity based
+book_recom_model<- Recommender(book_rating_matrix,method = "POPULAR")
+book_recom_model
+
+#Predictions for 10 users 
+recomded_item<- predict(book_recom_model,book_rating_matrix[201:210],n = 5)
+as(recomded_item,"list")
+
+## Popularity model recommends the same movies for all users , we need to improve our model using # # Collaborative Filtering
+#User Based Collaborative Filtering
+
+book_rating_matrix2<- as(book1,"binaryRatingMatrix")
+
+book_recom_model2<- Recommender(book_rating_matrix2,method = "UBCF")
+recomded_item2<- predict(book_recom_model2,book_rating_matrix2[201:210],n = 5)
+as(recomded_item2,"list")
